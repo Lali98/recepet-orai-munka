@@ -1,12 +1,14 @@
-import {Fragment, useEffect, useState} from "react";
-import {Spinner} from "./Spinner";
-import {NavLink} from "react-router-dom";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPencilAlt} from "@fortawesome/free-solid-svg-icons";
+import { Fragment, useEffect, useState } from "react";
+import { Spinner } from "./Spinner";
+import { NavLink } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faEye, faPencilAlt, faTimes} from "@fortawesome/free-solid-svg-icons";
+import {Modal} from "./Modal";
 
 export function RecipeList() {
     const [recipes, setRecipes] = useState([]);
     const [isPending, setPending] = useState(false);
+    const [deleteId, setDeleteId] = useState("");
     function fetchRecipes() {
         return fetch(process.env.REACT_APP_BACKEND_URL + "/api/recipes")
             .then((res) => res.json())
@@ -23,6 +25,18 @@ export function RecipeList() {
     }
     return (
         <Fragment>
+            {deleteId !== "" ? (
+                <Modal onApproved={async () => {
+                    setPending(true);
+                    await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/recipes/${deleteId}`,
+                        {method: 'DELETE'}
+                    );
+                    setDeleteId("");
+                    await fetchRecipes();
+                    setPending(false);
+                }
+                } onClosed={() => setDeleteId("")}>Biztosan törlöd a {recipes.find((recipe) => recipe.id === deleteId)?.name} receptjét?</Modal>
+            ): ("")}
             {alignToRows(recipes).map((row, i) => (
                 <div className='row mb-3' key={i}>
                     {row.map((recipe) => (
@@ -38,6 +52,14 @@ export function RecipeList() {
                                             <FontAwesomeIcon icon={faPencilAlt} />
                                         </button>
                                     </NavLink>
+                                    <NavLink to={`/recept/${recipe.slug}`}>
+                                        <button className='btn btn-sm btn-outline-primary mr-2'>
+                                            <FontAwesomeIcon icon={faEye} />
+                                        </button>
+                                    </NavLink>
+                                    <button className='btn btn-sm btn-outline-danger mr-2' onClick={() => {setDeleteId(recipe.id)}}>
+                                        <FontAwesomeIcon icon={faTimes} />
+                                    </button>
                                 </div>
                             </div>
                         </div>
