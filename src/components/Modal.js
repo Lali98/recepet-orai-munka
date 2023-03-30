@@ -1,6 +1,5 @@
 export function Modal({onClosed, onApproved, children}) {
-    return (
-        <div className='modal d-block'>
+    return (<div className='modal d-block'>
             <div className="modal-dialog">
                 <div className='modal-content'>
                     <div className='modal-header'>
@@ -22,6 +21,5 @@ export function Modal({onClosed, onApproved, children}) {
                     </div>
                 </div>
             </div>
-        </div>
-    )
+        </div>)
 }

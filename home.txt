@@ -10,11 +10,13 @@ export function Home() {
             .then((response) => response.json())
             .then((recipes) => setNumberOfRecipes(recipes.length));
     }, [])
-    return (<div className='jumbotron'>
+    return (
+        <div className='jumbotron'>
             <h1>Üdv a recept appban</h1>
             <p>Jelenleg {numberOfRecipes} recept elérhető</p>
             <NavLink to={'/receptek'}>
-                <button className='btn btn-primary'>Tovább <FontAwesomeIcon icon={faArrowCircleRight}/></button>
+                <button className='btn btn-primary'>Tovább <FontAwesomeIcon icon={faArrowCircleRight} /></button>
             </NavLink>
-        </div>)
+        </div>
+    )
 }
